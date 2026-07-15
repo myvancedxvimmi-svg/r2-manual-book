@@ -87,24 +87,10 @@
   .topbtn{position:fixed;top:14px;right:18px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
           color:var(--fg2);border-radius:20px;padding:6px 14px;font-size:12.5px;cursor:pointer;transition:.18s}
   .topbtn:hover{color:#fff;border-color:var(--acc);box-shadow:0 0 12px var(--glow)}
-  
-  /* mobile menu toggle */
-  .menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
-            color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;}
-  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;backdrop-filter:blur(2px)}
-  
-  @media(max-width:860px){
-    .menu-btn{display:block}
-    nav{position:fixed;left:-280px;transition:left .3s;z-index:45;box-shadow:4px 0 20px rgba(0,0,0,.5)}
-    nav.open{left:0}
-    .overlay.open{display:block}
-    main{padding:60px 16px 20px}.topbtn{top:14px;right:14px}
-  }
+  @media(max-width:860px){nav{display:none}main{padding:20px 16px}.topbtn{top:8px;right:10px}}
 </style>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn">☰ Menu</button>
-<div class="overlay" id="overlay"></div>
 <button class="topbtn" id="topBtn">⬆ Atas</button>
 <div class="wrap">
 <nav>
@@ -122,7 +108,6 @@
   <a href="#sektor">10. Pemetaan Sektor</a>
   <a href="#thread">11. Thread &amp; Forum</a>
   <a href="#akses">12. Cara Akses Manual Book</a>
-  <a href="#ketentuan">12.5. Ketentuan Grup</a>
   <a href="#trouble">13. Troubleshooting</a>
   <a href="#deploy">14. Deploy &amp; Webhook</a>
 </nav>
@@ -377,12 +362,15 @@
   <h2>6. Alur Laporan Kerusakan</h2>
   <p>Saat teknisi mengetik di thread <b>Input Pekerjaan</b> (bukan perintah):</p>
   <ol class="tight">
-    <li>Pastikan posisi mesin / line sudah benar sebelum melapor.</li>
-    <li>Kirim laporan langsung ke bot dengan format standar (<code>Line [N] Mc [No] : [Masalah]</code>).</li>
-    <li>Tunggu balasan <code>✅ Dicatat</code> dari bot sebagai bukti laporan telah terekam.</li>
-    <li>Cek semua rekapan aktif via perintah <code>/review</code>.</li>
-    <li>Kirim rekapan resmi ke thread Hasil Rekapan via perintah <code>/kirim</code>.</li>
-    <li>Arsipkan data dan tutup shift via perintah <code>/selesai</code>.</li>
+    <li>Webhook terima → <span class="mono">doPost(e)</span> → log "PESAN DITERIMA".</li>
+    <li>Anti-spam &amp; dedup cache cek.</li>
+    <li><span class="mono">formatWithAI(text)</span> panggil AI → dapat array JSON.</li>
+    <li>Untuk tiap item: cari Line (jika kosong, map dari Inventory via nama mesin).</li>
+    <li>Jika Line tetap kosong → tolak dengan pesan warning.</li>
+    <li><span class="mono">formalize()</span> → kapital huruf pertama + diakhiri titik + auto-correct typo (mc→Mesin, convyer→Conveyor, dll).</li>
+    <li>Ambil Kode Mesin &amp; No Equip dari Inventory (jika mode formal).</li>
+    <li>Simpan ke <span class="mono">Data</span>: <code>Line X Mc Y: masalah. Notif Z.</code></li>
+    <li>Balas ringkas: <code>✅ Dicatat:\n- Line 14: pergantian belt selaer\n- Line 15: ...</code></li>
   </ol>
   <div class="codeblock">
     <button class="copy-btn" data-copy>Copy</button>
@@ -452,18 +440,6 @@ Kecelakaan Kerja:</code></pre>
     <tr><td><code>/mode mesin</code> + <code>/mode formal</code></td><td><code>Line 10 Mesin 2 AA 998100: Pergantian belt variable putus. Notif 123456.</code></td></tr>
   </table>
   <div class="note ok"><b>Auto-formal:</b> Setiap input otomatis dikapitalisasi huruf pertamanya &amp; diakhiri titik. Typo umum dikoreksi (mc→Mesin, convyer→Conveyor, slayer→Sealer, sodok→Feeder, dt→DT).</div>
-  <h3>Conveyor (tanpa label Mc/Mesin)</h3>
-  <p>Jenis <b>Conveyor</b> (overhead, modular, autofeeding, metal detector, crossfeeding, distributor) <b>tidak</b> memakai label Mc/Mesin — langsung "Conveyor [subtype]".</p>
-  <table>
-    <tr><th>Input User</th><th>Hasil Laporan</th></tr>
-    <tr><td><code>conveyor crf</code> / <code>crf</code> / <code>crossfeeding</code></td><td><code>Line 9 Conveyor Crossfeeding: Macet.</code></td></tr>
-    <tr><td><code>conveyor overhead</code></td><td><code>Line 4 Conveyor Overhead: Putus.</code></td></tr>
-    <tr><td><code>conveyor modular</code></td><td><code>Line 7 Conveyor Modular: Error.</code></td></tr>
-    <tr><td><code>conveyor autofeeding</code></td><td><code>Line 3 Conveyor Autofeeding: Macet.</code></td></tr>
-    <tr><td><code>conveyor metal detector</code></td><td><code>Line 5 Conveyor Metal Detector: False trip.</code></td></tr>
-    <tr><td><code>conveyor distributor</code></td><td><code>Line 8 Conveyor Distributor: Mampet.</code></td></tr>
-  </table>
-  <div class="note"><b>Mesin lain</b> (Mc 1, Mesin 2, sealer, dll) tetep pakai label Mc/Mesin sesuai <span class="mono">/mode</span>.</div>
 </section>
 
 <!-- 9 -->
@@ -513,35 +489,20 @@ Kecelakaan Kerja:</code></pre>
 <!-- 12 -->
 <section id="akses">
   <h2>12. Cara Akses Manual Book (User Lain)</h2>
-  <p>Manual book ini di-serve publik dari GitHub Pages.</p>
-  <div class="note ok"><b>Penting:</b> Manual book &amp; bot berjalan terpisah. Halaman ini di-host di GitHub Pages, menjamin akses cepat tanpa membebani kuota eksekusi Google Apps Script.</div>
-</section>
-
-<!-- 12.5 -->
-<section id="ketentuan">
-  <h2>12.5. Ketentuan Grup</h2>
-  <ul class="tight">
-    <li>Topik hanya laporan kerusakan &amp; diskusi mesin R2PCKGZ1.</li>
-    <li>Dilarang spam, off-topic, dan konten tidak pantas.</li>
-    <li>Dilarang kirim file / link mencurigakan.</li>
-    <li>Hormati operator &amp; teknisi.</li>
-    <li>Pelanggaran berulang = peringatan → kick.</li>
-  </ul>
-</section>
+  <p>Manual book ini di-deploy sebagai <b>Web App</b> Google Apps Script, sehingga siapa saja bisa membukanya lewat browser tanpa akses ke source code.</p>
   <div class="note ok"><b>Langkah untuk user lain:</b></div>
   <ol class="tight">
-    <li>Buka URL Web App (format: <code>https://script.google.com/macros/s/&lt;DEPLOY_ID&gt;/exec</code>).</li>
+    <li>Buka URL Web App yang di-share admin (format: <code>https://script.google.com/macros/s/&lt;DEPLOY_ID&gt;/exec</code>).</li>
     <li>Akses <b>ANYONE_ANONYMOUS</b> → tidak perlu login Google.</li>
     <li>Gunakan kolom <b>Cari section...</b> di kiri untuk filter cepat, atau klik daftar isi.</li>
   </ol>
-  <div class="note"><b>Admin:</b> Deployment di-<b>pin</b> (<span class="mono">--deploymentId</span> sama tiap update) → URL stabil, tidak berubah tiap deploy. Pastikan <span class="mono">doGet()</span> ada di Code.js (sudah ditambahkan).</div>
+  <div class="note"><b>Admin:</b> Setiap <code>clasp push &amp;&amp; clasp deploy</code> menghasilkan deployment baru. Agar URL stabil, gunakan <span class="mono">--deploymentId</span> yang sama saat deploy update, atau share URL versi terakhir ke user. Pastikan <span class="mono">doGet()</span> ada di Code.js (sudah ditambahkan).</div>
   <div class="codeblock">
     <button class="copy-btn" data-copy>Copy</button>
-    <pre><code># Deploy web app (pin ID biar URL tidak berubah)
-clasp push
-clasp deploy --deploymentId AKfycbxDMbvxi2ZFvlRA5nckyMWkznywd6lKMzB4G81ozCQYZH7mpcMrsJ_9bIe2Eg0VJ4QwaA
-# Output URL tetap:
-# https://script.google.com/macros/s/AKfycbxDMbvxi2ZFvlRA5nckyMWkznywd6lKMzB4G81ozCQYZH7mpcMrsJ_9bIe2Eg0VJ4QwaA/exec</code></pre>
+    <pre><code># Deploy web app (simpan ID ini untuk share ke user)
+clasp deploy
+# Output: Deployed AKfycby... @NN  ->  URL:
+# https://script.google.com/macros/s/AKfycby.../exec</code></pre>
   </div>
 </section>
 
@@ -679,21 +640,6 @@ search.addEventListener('input', function(){
 // Back to top
 document.getElementById('topBtn').addEventListener('click', function(){
   window.scrollTo({top:0, behavior:'smooth'});
-});
-
-// Mobile Menu
-var nav = document.querySelector('nav');
-var overlay = document.getElementById('overlay');
-document.getElementById('menuBtn').addEventListener('click', function(){
-  nav.classList.add('open'); overlay.classList.add('open');
-});
-overlay.addEventListener('click', function(){
-  nav.classList.remove('open'); overlay.classList.remove('open');
-});
-links.forEach(function(l){
-  l.addEventListener('click', function(){
-    if(window.innerWidth <= 860) { nav.classList.remove('open'); overlay.classList.remove('open'); }
-  });
 });
 </script>
 </body>
