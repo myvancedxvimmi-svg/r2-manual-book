@@ -1,65 +1,700 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Manual Book — R2PCKGZ1</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Book — R2PCKGZ1_Dev Bot</title>
 <style>
-  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; color: #1a1a1a; line-height: 1.55; }
-  h1 { font-size: 22px; border-bottom: 3px solid #0a7cff; padding-bottom: 8px; }
-  h2 { font-size: 17px; margin-top: 26px; color: #0a4fb0; }
-  code { background: #eef3f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
-  pre { background: #1e1e1e; color: #e6e6e6; padding: 12px 14px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
-  .card { background: #f6f9fc; border: 1px solid #d8e4f0; border-radius: 10px; padding: 12px 16px; margin: 12px 0; }
-  ul { padding-left: 20px; } li { margin: 4px 0; }
-  .tag { display: inline-block; background: #0a7cff; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+  :root{
+    --bg:#050507; --bg2:#0d0d12; --bg3:#16161f; --bg4:#1d1d28;
+    --line:#262633; --line2:#33334a;
+    --fg:#ededf2; --fg2:#9a9ab0; --fg3:#5c5c72;
+    --acc:#7c5cff; --acc2:#00e5ff; --glow:rgba(124,92,255,.35);
+    --warn:#ff6b6b; --ok:#3ddc97;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(124,92,255,.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(0,229,255,.06), transparent 60%),
+      var(--bg);
+    color:var(--fg);font:15px/1.65 'Segoe UI',system-ui,sans-serif}
+  a{color:var(--acc2);text-decoration:none;border-bottom:1px solid transparent;transition:.2s}
+  a:hover{border-color:var(--acc2)}
+  code{background:var(--bg4);padding:1px 6px;border-radius:4px;font-family:'Cascadia Code',Consolas,monospace;font-size:13px;color:#c9c2ff}
+  pre{background:linear-gradient(180deg,var(--bg2),var(--bg));border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;padding:14px;overflow:auto}
+  pre code{background:none;padding:0;color:var(--fg)}
+  .wrap{display:flex;max-width:1280px;margin:0 auto}
+  /* TOC */
+  nav{position:sticky;top:0;align-self:flex-start;height:100vh;width:270px;flex:0 0 270px;
+      background:rgba(13,13,18,.85);backdrop-filter:blur(8px);border-right:1px solid var(--line);
+      padding:20px 14px;overflow:auto}
+  nav h3{margin:0 0 10px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--fg3)}
+  nav a{display:block;padding:7px 11px;margin:2px 0;border-radius:7px;color:var(--fg2);font-size:13.5px;border:none;transition:.18s}
+  nav a:hover{background:var(--bg3);color:var(--fg)}
+  nav a.active{background:linear-gradient(90deg,var(--acc),transparent);color:#fff;font-weight:600;box-shadow:0 0 14px var(--glow)}
+  #navSearch{width:100%;margin:4px 0 14px;padding:8px 11px;background:var(--bg3);border:1px solid var(--line);
+      border-radius:8px;color:var(--fg);font-size:13px;outline:none}
+  #navSearch:focus{border-color:var(--acc);box-shadow:0 0 10px var(--glow)}
+  /* Main */
+  main{flex:1;padding:34px 44px 140px;min-width:0}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:32px;
+      background:linear-gradient(180deg,rgba(124,92,255,.07),transparent);border-radius:14px;padding:26px 28px}
+  header.hero h1{font-size:32px;margin:0 0 8px;letter-spacing:-.5px;
+      background:linear-gradient(90deg,#fff,var(--acc2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  header.hero p{color:var(--fg2);margin:0}
+  .badge{display:inline-block;background:var(--bg3);border:1px solid var(--line2);border-radius:20px;
+         padding:3px 12px;font-size:12px;color:var(--fg2);margin:5px 5px 0 0}
+  .badge.new{border-color:var(--acc);color:#cbbcff;box-shadow:0 0 8px var(--glow)}
+  section{margin:0 0 50px;scroll-margin-top:20px;
+      background:linear-gradient(180deg,rgba(255,255,255,.015),transparent);border:1px solid var(--line);
+      border-radius:14px;padding:24px 28px}
+  section h2{font-size:22px;border-left:4px solid var(--acc);padding-left:12px;margin:0 0 16px;
+      text-shadow:0 0 18px var(--glow)}
+  section h3{font-size:17px;color:var(--fg);margin:24px 0 10px}
+  p{color:var(--fg2)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:var(--bg4);color:var(--fg);font-weight:600;border-bottom:2px solid var(--acc)}
+  tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+  tr:hover td{background:rgba(124,92,255,.06)}
+  /* Accordion */
+  .acc{border:1px solid var(--line);border-radius:10px;margin:10px 0;overflow:hidden;background:var(--bg2);transition:.2s}
+  .acc:hover{border-color:var(--line2);box-shadow:0 0 16px rgba(124,92,255,.12)}
+  .acc-head{width:100%;text-align:left;background:none;border:none;color:var(--fg);font-size:15px;
+            padding:14px 16px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+  .acc-head:hover{background:var(--bg3);color:#fff}
+  .acc-head .plus{color:var(--acc);font-weight:700;font-size:18px;transition:.2s}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  .acc-body .inner{padding:4px 16px 16px;color:var(--fg2)}
+  /* Code copy */
+  .codeblock{position:relative;margin:12px 0}
+  .copy-btn{position:absolute;top:8px;right:8px;background:var(--bg4);color:var(--fg);border:1px solid var(--line2);
+            border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;transition:.18s}
+  .copy-btn:hover{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 0 12px var(--glow)}
+  .copy-btn.ok{background:var(--ok);color:#04150d;border-color:var(--ok)}
+  /* Callout */
+  .note{border:1px solid var(--line);border-left:4px solid var(--acc);background:var(--bg2);
+        padding:12px 16px;border-radius:6px;color:var(--fg2);margin:14px 0}
+  .note b{color:var(--fg)}
+  .note.warn{border-left-color:var(--warn)}
+  .note.ok{border-left-color:var(--ok)}
+  ul.tight li{margin:4px 0;color:var(--fg2)}
+  ol.tight li{margin:6px 0;color:var(--fg2)}
+  .mono{font-family:'Cascadia Code',Consolas,monospace;font-size:13px;color:#c9c2ff}
+  footer{border-top:1px solid var(--line);margin-top:60px;padding-top:20px;color:var(--fg3);font-size:13px}
+  /* dark toggle */
+  .topbtn{position:fixed;top:14px;right:18px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
+          color:var(--fg2);border-radius:20px;padding:6px 14px;font-size:12.5px;cursor:pointer;transition:.18s}
+  .topbtn:hover{color:#fff;border-color:var(--acc);box-shadow:0 0 12px var(--glow)}
+  
+  /* mobile menu toggle */
+  .menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
+            color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;backdrop-filter:blur(2px)}
+  
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    nav{position:fixed;left:-280px;transition:left .3s;z-index:45;box-shadow:4px 0 20px rgba(0,0,0,.5)}
+    nav.open{left:0}
+    .overlay.open{display:block}
+    main{padding:60px 16px 20px}.topbtn{top:14px;right:14px}
+  }
 </style>
 </head>
 <body>
-<h1>📌 Manual Book — Pusat Pelaporan Kerusakan Resmi R2PCKGZ1</h1>
+<button class="menu-btn" id="menuBtn">☰ Menu</button>
+<div class="overlay" id="overlay"></div>
+<button class="topbtn" id="topBtn">⬆ Atas</button>
+<div class="wrap">
+<nav>
+  <h3>Daftar Isi</h3>
+  <input id="navSearch" placeholder="Cari section...">
+  <a href="#intro">1. Pengenalan</a>
+  <a href="#arsitektur">2. Arsitektur Sistem</a>
+  <a href="#config">3. Konfigurasi &amp; Token</a>
+  <a href="#sheets">4. Struktur Spreadsheet</a>
+  <a href="#commands">5. Daftar Perintah (/)</a>
+  <a href="#flow-lapor">6. Alur Laporan Kerusakan</a>
+  <a href="#flow-rekap">7. Alur Rekap &amp; Shift</a>
+  <a href="#mode-style">8. Mode &amp; Gaya Laporan</a>
+  <a href="#ai">9. Engine AI &amp; Fallback</a>
+  <a href="#sektor">10. Pemetaan Sektor</a>
+  <a href="#thread">11. Thread &amp; Forum</a>
+  <a href="#akses">12. Cara Akses Manual Book</a>
+  <a href="#ketentuan">12.5. Ketentuan Grup</a>
+  <a href="#trouble">13. Troubleshooting</a>
+  <a href="#deploy">14. Deploy &amp; Webhook</a>
+</nav>
 
-<div class="card">
-<b>Bot pencatat:</b> 24/7 &nbsp;•&nbsp; <b>Teknisi on-call:</b> Senin–Jumat 08.00–17.00 WIB
+<main>
+<header class="hero">
+  <h1>R2PCKGZ1_Dev Bot</h1>
+  <p>Manual book interaktif — Telegram Maintenance Bot untuk laporan kerusakan mesin pabrik (Zona 1, Group R2).</p>
+  <div>
+    <span class="badge">Google Apps Script</span>
+    <span class="badge">Telegram Webhook</span>
+    <span class="badge">Gemini + Groq AI</span>
+    <span class="badge">Spreadsheet DB</span>
+    <span class="badge new">Dark · Interactive</span>
+    <span class="badge new">Web App Access</span>
+  </div>
+</header>
+
+<!-- 1 -->
+<section id="intro">
+  <h2>1. Pengenalan</h2>
+  <p>Bot ini menerima laporan kerusakan mesin dari teknisi lewat Telegram, mengekstrak info (<b>Line</b>, <b>Mesin</b>, <b>Masalah</b>) menggunakan AI, menyimpannya ke Google Spreadsheet, lalu mengirim rekap ke thread Hasil Rekapan saat shift selesai.</p>
+  <div class="note"><b>Masalah yang diselesaikan:</b> Teknisi biasanya mengetik laporan bebas (typo, multi-line, format acak). Bot otomatis merapikan jadi struktur baku tanpa teknisi harus isi form.</div>
+  <h3>Komponen Utama</h3>
+  <ul class="tight">
+    <li><span class="mono">doPost(e)</span> — Webhook handler, titik masuk semua pesan Telegram.</li>
+    <li><span class="mono">doGet()</span> — Serve manual book ini sebagai web app (akses siapa saja).</li>
+    <li><span class="mono">safeGetSheet()</span> — Manajemen tab Spreadsheet (auto-create).</li>
+    <li><span class="mono">formatWithAI()</span> — Ekstrak teks bebas jadi array JSON via AI.</li>
+    <li><span class="mono">askGemini()</span> — Balas pertanyaan bebas di thread "Ask With AI".</li>
+    <li><span class="mono">kirimRekapan() / selesaiShift()</span> — Pipeline rekap akhir shift.</li>
+  </ul>
+</section>
+
+<!-- 2 -->
+<section id="arsitektur">
+  <h2>2. Arsitektur Sistem</h2>
+  <p>Alur data dari pesan masuk sampai tersimpan:</p>
+  <pre><code>Telegram  ──webhook──▶  doPost(e)
+                             │
+                  ┌──────────┴───────────┐
+            Callback Query?          Pesan Teks?
+                  │                      │
+          (approve/reject)        Thread = Input Pekerjaan?
+                                          │
+                                  formatWithAI(text)
+                                          │  Gemini 2.5-flash
+                                          │  → 2.0-flash-lite (fallback)
+                                          │  → Groq llama-3.1-8b (fallback)
+                                          ▼
+                                  Parse JSON [line, mesin, masalah]
+                                          │
+                                  formalize() → kapital + titik
+                                          │
+                                  sheet.appendRow → "Data"
+                                          │
+                                  sendMessage → "✅ Dicatat: ..."</code></pre>
+  <div class="note"><b>Respon wajib HTTP 200:</b> Webhook mengembalikan <span class="mono">HtmlService.createHtmlOutput("OK")</span> di baris pertama sebelum logic apa pun, untuk mencegah Telegram melakukan retry loop (error 302 Found).</div>
+</section>
+
+<!-- 3 -->
+<section id="config">
+  <h2>3. Konfigurasi &amp; Token</h2>
+  <p>Semua konfigurasi statis ada di bagian atas <span class="mono">Code.js</span>:</p>
+  <table>
+    <tr><th>Variabel</th><th>Nilai / Fungsi</th></tr>
+    <tr><td><span class="mono">BOT_TOKEN</span></td><td>Token bot Telegram (R2PCKGZ1_Dev_bot).</td></tr>
+    <tr><td><span class="mono">CHAT_ID</span></td><td><span class="mono">-1003650293920</span> — ID grup utama.</td></tr>
+    <tr><td><span class="mono">REKAP_THREAD_ID</span></td><td><span class="mono">"6"</span> — Thread "Hasil Rekapan".</td></tr>
+    <tr><td><span class="mono">CHITCHAT_THREAD_ID</span></td><td><span class="mono">"11"</span> — Thread "Ask With AI" (chat bebas + foto vision).</td></tr>
+    <tr><td><span class="mono">INPUT_THREAD_ID</span></td><td><span class="mono">"2"</span> — Thread "Input Pekerjaan".</td></tr>
+    <tr><td><span class="mono">SPREADSHEET_ID</span></td><td>ID Spreadsheet penyimpanan semua data.</td></tr>
+  </table>
+  <h3>API Keys (AI Engine)</h3>
+  <table>
+    <tr><th>Pool</th><th>Jumlah</th><th>Model</th><th>Kegunaan</th></tr>
+    <tr><td><span class="mono">GEMINI_KEYS</span></td><td>7 key</td><td>gemini-2.5-flash / 2.0-flash-lite</td><td>Ekstraksi laporan &amp; chat AI</td></tr>
+    <tr><td><span class="mono">GROQ_KEYS</span></td><td>2 key</td><td>llama-3.1-8b-instant</td><td>Failover jika Gemini habis quota</td></tr>
+    <tr><td><span class="mono">OPENROUTER_KEYS</span></td><td>12 key</td><td>(cadangan, belum aktif di flow utama)</td><td>Reserve</td></tr>
+  </table>
+  <div class="note"><b>Anti-Spam:</b> Pesan dari bot sendiri (<span class="mono">username === "R2PCKGZ1_Dev_bot"</span>) diabaikan. Dedup cache 5 menit mencegah pesan sama dikirim ulang oleh Telegram saat retry.</div>
+</section>
+
+<!-- 4 -->
+<section id="sheets">
+  <h2>4. Struktur Spreadsheet</h2>
+  <p>Bot menggunakan 7 tab. Semua dibuat otomatis oleh <span class="mono">safeGetSheet()</span> jika belum ada.</p>
+  <table>
+    <tr><th>Tab</th><th>Header Kolom</th><th>Fungsi</th></tr>
+    <tr><td><span class="mono">Data</span></td><td>Timestamp, Laporan, No Notif</td><td>Tempo laporan kerusakan aktif dalam shift. No Notif = nomor order produksi.</td></tr>
+    <tr><td><span class="mono">Inventory</span></td><td>Nama Mesin, Nomor Line, Kode Mesin, No Equipment, No Notif</td><td>Master data mesin. Mapping mesin → line &amp; field formal.</td></tr>
+    <tr><td><span class="mono">Template</span></td><td>Key, Value</td><td>Simpan setting: REKAP_TEMPLATE, MODE, LABEL.</td></tr>
+    <tr><td><span class="mono">Archive</span></td><td>Timestamp, Mesin, Masalah, Laporan Lengkap</td><td>History permanen setelah /selesai.</td></tr>
+    <tr><td><span class="mono">Memory</span></td><td>ThreadID, Role, Message</td><td>History chat AI (context /status &amp; Ask With AI).</td></tr>
+    <tr><td><span class="mono">DebugLogs</span></td><td>Timestamp, Message</td><td>Log debug (PESAN DITERIMA, error).</td></tr>
+    <tr><td><span class="mono">Manuals</span></td><td>(baris teks bebas)</td><td>Manual book mesin di-feed ke AI saat menjawab.</td></tr>
+  </table>
+  <div class="note"><b>Manuals tab:</b> Isi 3 baris pertama dibaca otomatis dan disisipkan ke system instruction <span class="mono">askGemini()</span> agar jawaban AI mereferensikan data manual book mesin pabrik.</div>
+</section>
+
+<!-- 5 -->
+<section id="commands">
+  <h2>5. Daftar Perintah (/)</h2>
+  <p>Perintah diawali <span class="mono">/</span> dan diproses di thread manapun. Ketik <span class="mono">/</span> di Telegram untuk lihat semua dengan deskripsi.</p>
+
+  <div class="acc">
+    <button class="acc-head">/review <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Tampilkan semua laporan tersimpan di tab <span class="mono">Data</span> beserta nomor urutnya.<br>
+      <b>Cara:</b> <code>/review</code> (tanpa argumen).<br>
+      Jika kosong → balas <span class="mono">"Kosong."</span> Nomor urut dipakai untuk <span class="mono">/hapus</span>.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/hapus [no] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Hapus baris ke-<b>[no]</b> dari review (berdasar nomor di <span class="mono">/review</span>).<br>
+      <b>Cara:</b> <code>/hapus 2</code> → hapus baris nomor 2 di sheet Data.<br>
+      <b>Validasi:</b> <code>rowNum &gt; 0 &amp;&amp; rowNum &lt; sheet.getLastRow()</code>. Di luar range → abaikan.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/reset <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Kosongkan seluruh isi tab <span class="mono">Data</span> dan <span class="mono">Memory</span> (baris setelah header dihapus).<br>
+      <span class="note warn"><b>Hati-hati:</b> ini menghapus laporan yang belum dikirim. Tidak menyentuh Archive.</span>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/kirim <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Tampilkan preview semua laporan + inline keyboard <b>✅ Approve / ❌ Reject</b>.<br>
+      <ul class="tight">
+        <li><b>Approve</b> → jalankan <span class="mono">kirimRekapan()</span> ke thread Hasil Rekapan, lalu edit pesan jadi "✅ Rekapan dikirim".</li>
+        <li><b>Reject</b> → edit pesan jadi "❌ Rekapan dibatalkan".</li>
+      </ul>
+      Jika Data kosong → <span class="mono">"⚠️ Data kosong, tidak ada rekapan untuk dikirim."</span>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/selesai <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Pipeline akhir shift:<br>
+      1. <span class="mono">kirimRekapan()</span> ke Hasil Rekapan.<br>
+      2. Pindahkan semua baris <span class="mono">Data</span> → <span class="mono">Archive</span> (split Mesin / Masalah).<br>
+      3. Hapus isi <span class="mono">Data</span>.<br>
+      4. Balas "✅ Shift selesai! Data shift ini sudah di-archive ke sheet Archive."
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/tambahmesin [nama] [line] [kode] [equip] [notif] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Daftarkan mesin ke master data <span class="mono">Inventory</span> (sheet). Dipakai agar bot bisa mapping Line otomatis saat laporan hanya sebut nama mesin.<br>
+      <b>Cara:</b> <code>/tambahmesin &lt;nama&gt; &lt;line&gt; [kode] [equip] [notif]</code><br>
+      Argumen <b>wajib</b>: nama, line. <b>Opsional</b>: kode mesin, no equipment, no notif.<br>
+      <b>Contoh:</b><br>
+      <code>/tambahmesin conveyor 2</code> → daftar conveyor di Line 2.<br>
+      <code>/tambahmesin sealer 1 AA 123456 9981</code> → nama sealer, Line 1, kode AA, equip 123456, notif 9981.<br>
+      <span class="note">Jika arg &lt; 3 → balas <span class="mono">"⚠️ Format salah. Contoh: /tambahmesin conveyor 2 AA 123456 9981"</span></span>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/kode [kode] [mesin] [line] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Isi <b>Kode Mesin</b> di <span class="mono">Inventory</span> (khusus mesin ultra yang punya kode). Baris dibuat otomatis jika belum ada.<br>
+      <b>Cara:</b> <code>/kode &lt;kode&gt; &lt;mesin&gt; &lt;line&gt;</code><br>
+      <b>Contoh:</b> <code>/kode AA Mesin 2 1</code> → simpan kode <b>AA</b> untuk Mesin 2 Line 1.<br>
+      Kode ini akan muncul di laporan hanya saat <span class="mono">/mode formal</span> aktif.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/equip [no_equip] [mesin] [line] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Isi <b>No Equipment</b> mesin di <span class="mono">Inventory</span>. Semua mesin punya no equip.<br>
+      <b>Cara:</b> <code>/equip &lt;no_equip&gt; [mesin] [line]</code><br>
+      Line opsional jika mesin unik di 1 line.<br>
+      <b>Contoh:</b><br>
+      <code>/equip 123456 1</code> → no equip 123456 untuk mesin di Line 1.<br>
+      <code>/equip 998100 Mesin 2 1</code> → no equip 998100 untuk Mesin 2 Line 1.<br>
+      No equip muncul di laporan hanya saat <span class="mono">/mode formal</span> aktif.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/mode [mc|mesin|formal|nonformal] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Atur <b>label</b> & <b>gaya</b> laporan. Simpan persisten di sheet <span class="mono">Template</span>.<br>
+      <b>Label (identity):</b><br>
+      • <code>/mode mc</code> → pakai <b>Mc</b> (default, identity tim). Contoh: <code>Line 10 Mc 2: ...</code><br>
+      • <code>/mode mesin</code> → pakai <b>Mesin</b> (lebih formal). Contoh: <code>Line 10 Mesin 2: ...</code><br>
+      <b>Gaya:</b><br>
+      • <code>/mode nonformal</code> → ringkas (default): <code>Line 10 Mc 2: Pergantian belt variable putus. Notif 123456.</code><br>
+      • <code>/mode formal</code> → lengkap (Kode + Equip + Notif): <code>Line 10 Mc 2 AA 998100: Pergantian belt variable putus. Notif 123456.</code><br>
+      <span class="note">Label & gaya <b>terpisah</b> — bisa <code>/mode mc</code> + <code>/mode formal</code> barengan. Berlaku sampai diubah.</span>
+      Tanpa arg → balas status saat ini.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/status [nama] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Cek 5 riwayat perbaikan terakhir mesin dari <span class="mono">Data</span> + <span class="mono">Archive</span>.<br>
+      Nama mesin di-match sebagian (partial) ke <span class="mono">Inventory</span> untuk dapat Line.<br>
+      Jika tidak terdaftar → <span class="mono">"⚠️ Mesin tidak terdaftar di Inventory..."</span>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/settemplate [teks] <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      <b>Fungsi:</b> Ubah format laporan rekap lewat chat (gak perlu edit script). Tersimpan di <span class="mono">Template</span> key <span class="mono">REKAP_TEMPLATE</span>.<br>
+      <b>Penanda wajib:</b> <code>{TANGGAL}</code> (tanggal otomatis), <code>{DAFTAR}</code> (daftar kerusakan per sektor).<br>
+      <b>Cara:</b> <code>/settemplate &lt;teks penuh&gt;</code><br>
+      <b>Contoh:</b><br>
+      <code>/settemplate Report Packaging Zona 1\nGroup R2\n{TANGGAL}\n\nMasalah DT &gt;60 menit\n- Sektor 1:\n...\n\nDaftar Pekerjaan\n{DAFTAR}\n\nPengajuan Sparepart:\n\nKecelakaan Kerja:</code><br>
+      <span class="note">Kalau PT ganti format laporan → cukup ketik <code>/settemplate</code> baru. Default kembali jika baris dihapus.</span>
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/lihattemplate <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Tampilkan format rekap yang sedang aktif (isi <span class="mono">REKAP_TEMPLATE</span>).<br>
+      Jika belum pernah di-set → balas template default bawaan bot.
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/cekapi <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Tampilkan laporan status API (static report: jumlah key terdaftar, status aktif).
+    </div></div>
+  </div>
+
+  <div class="acc">
+    <button class="acc-head">/help <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Tampilkan daftar semua perintah di atas (teks ringkas di Telegram).
+    </div></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="flow-lapor">
+  <h2>6. Alur Laporan Kerusakan</h2>
+  <p>Saat teknisi mengetik di thread <b>Input Pekerjaan</b> (bukan perintah):</p>
+  <ol class="tight">
+    <li>Pastikan posisi mesin / line sudah benar sebelum melapor.</li>
+    <li>Kirim laporan langsung ke bot dengan format standar (<code>Line [N] Mc [No] : [Masalah]</code>).</li>
+    <li>Tunggu balasan <code>✅ Dicatat</code> dari bot sebagai bukti laporan telah terekam.</li>
+    <li>Cek semua rekapan aktif via perintah <code>/review</code>.</li>
+    <li>Kirim rekapan resmi ke thread Hasil Rekapan via perintah <code>/kirim</code>.</li>
+    <li>Arsipkan data dan tutup shift via perintah <code>/selesai</code>.</li>
+  </ol>
+  <div class="codeblock">
+    <button class="copy-btn" data-copy>Copy</button>
+    <pre><code>Input : "Line 14 15 16 pergantian belt selaer notif 5521"
+AI    : [{"line":"14","mesin":"","masalah":"pergantian belt selaer"},
+         {"line":"15",...},{"line":"16",...}]
+Simpan: Line 14 Mc -: Pergantian belt selaer. Notif 5521.
+        Line 15 Mc -: Pergantian belt selaer. Notif 5521.
+        Line 16 Mc -: Pergantian belt selaer. Notif 5521.
+Balas : ✅ Dicatat:
+        - Line 14 Mc -: Pergantian belt selaer.
+        - Line 15 Mc -: Pergantian belt selaer.
+        - Line 16 Mc -: Pergantian belt selaer.</code></pre>
+  </div>
+  <div class="note"><b>No Notif:</b> Nomor order dari produksi (SAP). Diekstrak otomatis dari teks "notif 5521" / "no notif 9981" → disimpan kolom ke-3 & di-append " Notif 5521." di akhir laporan.</div>
+  <div class="note"><b>Multi-line support:</b> Teks "semua line dari 1 sampe 21 mati lampu" diekstrak jadi 21 object terpisah (Line 1..21). Balasan digabung jadi 1 pesan agar tidak spam Telegram (batas 4000 char dipotong).</div>
+</section>
+
+<!-- 7 -->
+<section id="flow-rekap">
+  <h2>7. Alur Rekap &amp; Shift</h2>
+  <h3>kirimRekapan()</h3>
+  <p>Baca tab <span class="mono">Data</span>, kelompokkan per Sektor (lihat §10), format lalu kirim ke <span class="mono">REKAP_THREAD_ID</span> (Hasil Rekapan). Template diambil dari <span class="mono">Template!REKAP_TEMPLATE</span> (bisa diubah via <span class="mono">/settemplate</span>).</p>
+  <div class="codeblock">
+    <button class="copy-btn" data-copy>Copy</button>
+    <pre><code>Report Maintenance Packaging Zona 1
+Group R2
+[TANGGAL]
+
+Masalah DT >60 menit
+- Sektor 1:
+- Sektor 2:
+...
+
+Daftar Pekerjaan
+- Sektor 1:
+  - Line 2 Mc Boiler: mati total
+  ...
+
+Pengajuan Sparepart:
+Kanibalisme Sparepart:
+Kecelakaan Kerja:</code></pre>
+  </div>
+  <h3>selesaiShift()</h3>
+  <ul class="tight">
+    <li>Call <span class="mono">kirimRekapan()</span>.</li>
+    <li>Archive: tiap baris Data di-split pada ":" → kolom Mesin &amp; Masalah, simpan ke Archive.</li>
+    <li>Delete semua baris Data (kecuali header).</li>
+    <li>Konfirmasi ke Hasil Rekapan.</li>
+  </ul>
+</section>
+
+<!-- 8 -->
+<section id="mode-style">
+  <h2>8. Mode &amp; Gaya Laporan</h2>
+  <p>Bot punya 2 pengaturan terpisah yang disimpan persisten di sheet <span class="mono">Template</span>:</p>
+  <table>
+    <tr><th>Setting</th><th>Nilai</th><th>Effek pada laporan</th></tr>
+    <tr><td><span class="mono">LABEL</span></td><td><span class="mono">mc</span> (default) / <span class="mono">mesin</span></td><td>Label mesin: <code>Mc</code> atau <code>Mesin</code>.</td></tr>
+    <tr><td><span class="mono">MODE</span></td><td><span class="mono">nonformal</span> (default) / <span class="mono">formal</span></td><td>Gaya: ringkas atau lengkap (Kode + Equip + Notif).</td></tr>
+  </table>
+  <h3>Contoh Kombinasi</h3>
+  <table>
+    <tr><th>Perintah</th><th>Hasil Laporan</th></tr>
+    <tr><td><code>/mode mc</code> + <code>/mode nonformal</code></td><td><code>Line 10 Mc 2: Pergantian belt variable putus. Notif 123456.</code></td></tr>
+    <tr><td><code>/mode mc</code> + <code>/mode formal</code></td><td><code>Line 10 Mc 2 AA 998100: Pergantian belt variable putus. Notif 123456.</code></td></tr>
+    <tr><td><code>/mode mesin</code> + <code>/mode formal</code></td><td><code>Line 10 Mesin 2 AA 998100: Pergantian belt variable putus. Notif 123456.</code></td></tr>
+  </table>
+  <div class="note ok"><b>Auto-formal:</b> Setiap input otomatis dikapitalisasi huruf pertamanya &amp; diakhiri titik. Typo umum dikoreksi (mc→Mesin, convyer→Conveyor, slayer→Sealer, sodok→Feeder, dt→DT).</div>
+  <h3>Conveyor (tanpa label Mc/Mesin)</h3>
+  <p>Jenis <b>Conveyor</b> (overhead, modular, autofeeding, metal detector, crossfeeding, distributor) <b>tidak</b> memakai label Mc/Mesin — langsung "Conveyor [subtype]".</p>
+  <table>
+    <tr><th>Input User</th><th>Hasil Laporan</th></tr>
+    <tr><td><code>conveyor crf</code> / <code>crf</code> / <code>crossfeeding</code></td><td><code>Line 9 Conveyor Crossfeeding: Macet.</code></td></tr>
+    <tr><td><code>conveyor overhead</code></td><td><code>Line 4 Conveyor Overhead: Putus.</code></td></tr>
+    <tr><td><code>conveyor modular</code></td><td><code>Line 7 Conveyor Modular: Error.</code></td></tr>
+    <tr><td><code>conveyor autofeeding</code></td><td><code>Line 3 Conveyor Autofeeding: Macet.</code></td></tr>
+    <tr><td><code>conveyor metal detector</code></td><td><code>Line 5 Conveyor Metal Detector: False trip.</code></td></tr>
+    <tr><td><code>conveyor distributor</code></td><td><code>Line 8 Conveyor Distributor: Mampet.</code></td></tr>
+  </table>
+  <div class="note"><b>Mesin lain</b> (Mc 1, Mesin 2, sealer, dll) tetep pakai label Mc/Mesin sesuai <span class="mono">/mode</span>.</div>
+</section>
+
+<!-- 9 -->
+<section id="ai">
+  <h2>9. Engine AI &amp; Fallback</h2>
+  <p>Dua fungsi AI utama, masing-masing punya rantai fallback agar bot tidak bisu saat quota habis:</p>
+  <table>
+    <tr><th>Fungsi</th><th>Urutan Fallback</th></tr>
+    <tr><td><span class="mono">formatWithAI()</span></td><td>gemini-2.5-flash (7 key) → gemini-2.0-flash-lite (7 key) → Groq llama-3.1-8b (2 key)</td></tr>
+    <tr><td><span class="mono">askGemini()</span></td><td>gemini-2.5-flash → 2.0-flash-lite (chat mode) → Groq llama-3.1-8b</td></tr>
+  </table>
+  <p>Helper internal: <span class="mono">callGemini(prompt, keys, cfg)</span> &amp; <span class="mono">callGeminiChat(messages, keys)</span> — loop model × key, return teks pertama yang sukses.</p>
+  <div class="note"><b>Format output wajib:</b> AI harus balis array JSON murni tanpa markdown. Jika ada <code>```json</code> dibersihkan otomatis. Parse gagal → return <span class="mono">null</span> → bot balas "⚠️ Format salah. Gagal mengekstrak laporan kerusakan."</div>
+  <h3>Vision (Foto)</h3>
+  <p>Jika foto dikirim di thread <b>Ask With AI</b> → <span class="mono">analyzePhotoWithGemini()</span> download file, kirim ke Gemini Vision, balas analisa kerusakan.</p>
+  <div class="note"><b>Quota 429:</b> Gemini free-tier membatasi ~20 req/menit per model. Fallback ke model ringan (2.0-flash-lite) punya pool quota berbeda sehingga respon tetap jalan saat 2.5-flash limit.</div>
+</section>
+
+<!-- 10 -->
+<section id="sektor">
+  <h2>10. Pemetaan Sektor</h2>
+  <p>Fungsi <span class="mono">getSektor(line)</span> mengelompokkan nomor line ke sektor untuk rekap:</p>
+  <table>
+    <tr><th>Range Line</th><th>Sektor</th></tr>
+    <tr><td>1 – 4</td><td>Sektor 1</td></tr>
+    <tr><td>5 – 8</td><td>Sektor 2</td></tr>
+    <tr><td>9 – 12</td><td>Sektor 3</td></tr>
+    <tr><td>13 – 16</td><td>Sektor 4</td></tr>
+    <tr><td>17 – 21</td><td>Sektor 5</td></tr>
+  </table>
+  <p>Jika line tidak cocok range → <span class="mono">null</span> (tidak masuk rekap sektor, tapi tetap tersimpan di Data).</p>
+</section>
+
+<!-- 11 -->
+<section id="thread">
+  <h2>11. Thread &amp; Forum</h2>
+  <p>Grup adalah supergroup dengan mode forum (topik). Bot mengenali 3 thread utama:</p>
+  <table>
+    <tr><th>Thread ID</th><th>Nama Topik</th><th>Perilaku Bot</th></tr>
+    <tr><td><span class="mono">2</span> (INPUT_THREAD_ID)</td><td>🔧 Input Pekerjaan</td><td>Laporan kerusakan → ekstrak &amp; simpan ke Data.</td></tr>
+    <tr><td><span class="mono">6</span> (REKAP_THREAD_ID)</td><td>Hasil Rekapan</td><td>Tujuan kirim rekap (/kirim, /selesai).</td></tr>
+    <tr><td><span class="mono">11</span> (CHITCHAT_THREAD_ID)</td><td>Ask With AI</td><td>Chat bebas + foto vision via askGemini / analyzePhotoWithGemini.</td></tr>
+  </table>
+  <div class="note">Pesan tanpa <span class="mono">message_thread_id</span> atau di thread lain akan diproses sebagai laporan umum (masuk flow ekstraksi).</div>
+</section>
+
+<!-- 12 -->
+<section id="akses">
+  <h2>12. Cara Akses Manual Book (User Lain)</h2>
+  <p>Manual book ini di-serve publik dari GitHub Pages.</p>
+  <div class="note ok"><b>Penting:</b> Manual book &amp; bot berjalan terpisah. Halaman ini di-host di GitHub Pages, menjamin akses cepat tanpa membebani kuota eksekusi Google Apps Script.</div>
+</section>
+
+<!-- 12.5 -->
+<section id="ketentuan">
+  <h2>12.5. Ketentuan Grup</h2>
+  <ul class="tight">
+    <li>Topik hanya laporan kerusakan &amp; diskusi mesin R2PCKGZ1.</li>
+    <li>Dilarang spam, off-topic, dan konten tidak pantas.</li>
+    <li>Dilarang kirim file / link mencurigakan.</li>
+    <li>Hormati operator &amp; teknisi.</li>
+    <li>Pelanggaran berulang = peringatan → kick.</li>
+  </ul>
+</section>
+  <div class="note ok"><b>Langkah untuk user lain:</b></div>
+  <ol class="tight">
+    <li>Buka URL Web App (format: <code>https://script.google.com/macros/s/&lt;DEPLOY_ID&gt;/exec</code>).</li>
+    <li>Akses <b>ANYONE_ANONYMOUS</b> → tidak perlu login Google.</li>
+    <li>Gunakan kolom <b>Cari section...</b> di kiri untuk filter cepat, atau klik daftar isi.</li>
+  </ol>
+  <div class="note"><b>Admin:</b> Deployment di-<b>pin</b> (<span class="mono">--deploymentId</span> sama tiap update) → URL stabil, tidak berubah tiap deploy. Pastikan <span class="mono">doGet()</span> ada di Code.js (sudah ditambahkan).</div>
+  <div class="codeblock">
+    <button class="copy-btn" data-copy>Copy</button>
+    <pre><code># Deploy web app (pin ID biar URL tidak berubah)
+clasp push
+clasp deploy --deploymentId AKfycbxDMbvxi2ZFvlRA5nckyMWkznywd6lKMzB4G81ozCQYZH7mpcMrsJ_9bIe2Eg0VJ4QwaA
+# Output URL tetap:
+# https://script.google.com/macros/s/AKfycbxDMbvxi2ZFvlRA5nckyMWkznywd6lKMzB4G81ozCQYZH7mpcMrsJ_9bIe2Eg0VJ4QwaA/exec</code></pre>
+  </div>
+</section>
+
+<!-- 13 -->
+<section id="trouble">
+  <h2>13. Troubleshooting</h2>
+  <div class="acc">
+    <button class="acc-head">Bot bisu padahal "Completed" <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Cek <b>DebugLogs</b> sheet. Urutan log normal:<br>
+      1. <code>PESAN DITERIMA: {...}</code><br>
+      2. <code>DEBUG: Pesan terdeteksi, mulai proses...</code><br>
+      3. <code>DEBUG: Akan mengirim balasan ke Telegram...</code><br>
+      4. <code>DEBUG: Selesai.</code><br>
+      Jika mandek di step 2 → AI gagal (cek raw response 429). Jika mandek sebelum step 1 → webhook mati.
+    </div></div>
+  </div>
+  <div class="acc">
+    <button class="acc-head">Error 302 Found dari Telegram <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Pastikan <span class="mono">doPost</span> mengembalikan <span class="mono">HtmlService.createHtmlOutput("OK")</span> (bukan ContentService yang memicu redirect). Lalu reset webhook via <span class="mono">setWebhook</span>.
+    </div></div>
+  </div>
+  <div class="acc">
+    <button class="acc-head">Error 429 Quota Exhausted <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Gemini free-tier limit ~20 req/menit. Bot otomatis fallback ke <span class="mono">gemini-2.0-flash-lite</span> lalu Groq. Jika semua mati → balas "Semua AI key sibuk/limit. Coba lagi nanti." Tunggu ~1 menit.
+    </div></div>
+  </div>
+  <div class="acc">
+    <button class="acc-head">Pesan dobel / spam <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Dedup cache 5 menit aktif. Jika masih dobel, cek apakah pesan dikirim dari bot lain (bukan R2PCKGZ1_Dev_bot) — hanya bot sendiri yang diabaikan.
+    </div></div>
+  </div>
+  <div class="acc">
+    <button class="acc-head">Line kosong di laporan <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Jika AI tidak dapat Line tapi dapat nama mesin, bot cari Line dari <span class="mono">Inventory</span> (partial match). Jika mesin juga tidak terdaftar → laporan ditolak dengan warning.
+    </div></div>
+  </div>
+  <div class="acc">
+    <button class="acc-head">Kode/Equip tidak muncul di laporan <span class="plus">+</span></button>
+    <div class="acc-body"><div class="inner">
+      Pastikan sudah <span class="mono">/mode formal</span>. Kode Mesin &amp; No Equip hanya ditampilkan di gaya formal. Cek juga data di <span class="mono">Inventory</span> sudah diisi via <span class="mono">/kode</span> &amp; <span class="mono">/equip</span>.
+    </div></div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section id="deploy">
+  <h2>14. Deploy &amp; Webhook</h2>
+  <p>Workflow standar pengembangan:</p>
+  <div class="codeblock">
+    <button class="copy-btn" data-copy>Copy</button>
+    <pre><code># Edit Code.js lokal
+clasp push          # upload ke Apps Script
+clasp deploy        # buat version deployment baru (web app + webhook)
+# Reset webhook agar Telegram arahkan ke URL deploy terbaru
+curl -X POST "https://api.telegram.org/bot&lt;TOKEN&gt;/setWebhook?url=&lt;URL_DEPLOY_BARU&gt;"</code></pre>
+  </div>
+  <p>Cek status webhook kapan saja:</p>
+  <div class="codeblock">
+    <button class="copy-btn" data-copy>Copy</button>
+    <pre><code>curl -X POST "https://api.telegram.org/bot&lt;TOKEN&gt;/getWebhookInfo"</code></pre>
+  </div>
+  <div class="note"><b>Penting:</b> Setiap <span class="mono">clasp deploy</span> menghasilkan URL baru. Webhook <b>harus</b> di-reset ke URL tersebut, jika tidak Telegram masih menembak deployment lama. URL yang sama dipakai untuk akses manual book (doGet).</div>
+  <h3>Debug Logs</h3>
+  <p>Semua log tertulis di sheet <span class="mono">DebugLogs</span> (Tidak perlu buka menu Executions yang sering error). Log PESAN DITERIMA dipotong max 200 char agar sheet tidak membengkak.</p>
+</section>
+
+<footer>
+  Manual Book — R2PCKGZ1_Dev Bot · Dark Interactive Edition · Single-file HTML · Akses via Web App.
+</footer>
+</main>
 </div>
 
-<h2>1. SOP Pelaporan Kerusakan</h2>
-<ol>
-  <li>Pastikan posisi mesin / line sudah benar sebelum melapor.</li>
-  <li>Kirim laporan langsung ke bot dengan format standar (lihat Aturan Format).</li>
-  <li>Tunggu balasan <code>✅ Dicatat</code> dari bot sebagai bukti terekam.</li>
-  <li>Cek rekapan via <code>/review</code>; kirim ke rekapan resmi via <code>/kirim</code>.</li>
-  <li>Tutup shift dengan <code>/selesai</code>.</li>
-</ol>
+<script>
+// Accordion
+document.querySelectorAll('.acc-head').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var body = this.nextElementSibling;
+    var plus = this.querySelector('.plus');
+    if(body.style.maxHeight && body.style.maxHeight !== '0px'){
+      body.style.maxHeight = '0px';
+      plus.textContent = '+';
+    } else {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      plus.textContent = '–';
+    }
+  });
+});
 
-<h2>2. Aturan Format</h2>
-<p>Satu kerusakan = satu baris:</p>
-<pre>Line [N] Mc [No] : [Masalah]</pre>
-<p>Contoh:</p>
-<pre>Line 10 Mc 1 : Mati lampu</pre>
-<p>Multi-line:</p>
-<pre>Line 1-5 Mc 2 : Error sensor suhu</pre>
+// Copy buttons
+document.querySelectorAll('.copy-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = this.parentElement.querySelector('code');
+    var text = code.innerText;
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent = 'Copied ✓'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('ok'); }, 1500);
+    }).catch(function(){
+      var ta = document.createElement('textarea'); ta.value = text;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent='Copied ✓'; btn.classList.add('ok');
+      setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('ok'); }, 1500);
+    });
+  });
+});
 
-<h2>3. Perintah Cepat</h2>
-<ul>
-  <li><code>/review</code> — lihat rekapan laporan.</li>
-  <li><code>/kirim</code> — kirim rekapan ke grup rekapan resmi.</li>
-  <li><code>/selesai</code> — arsipkan & tutup shift.</li>
-  <li><code>/help</code> — tampilkan pesan bantuan.</li>
-</ul>
+// Scroll-spy TOC
+var links = Array.prototype.slice.call(document.querySelectorAll('nav a'));
+var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      var id = '#' + e.target.id;
+      links.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === id); });
+    }
+  });
+}, {rootMargin:'-10% 0px -80% 0px'});
+sections.forEach(function(s){ if(s) obs.observe(s); });
 
-<h2>4. Ketentuan Grup</h2>
-<ul>
-  <li>Topik hanya laporan kerusakan &amp; diskusi mesin R2PCKGZ1.</li>
-  <li>Dilarang spam, off-topic, dan konten tidak pantas.</li>
-  <li>Dilarang kirim file / link mencurigakan.</li>
-  <li>Hormati operator &amp; teknisi.</li>
-  <li>Pelanggaran berulang = peringatan → kick.</li>
-</ul>
+// Search filter TOC
+var search = document.getElementById('navSearch');
+search.addEventListener('input', function(){
+  var q = this.value.toLowerCase();
+  links.forEach(function(l){
+    var match = l.textContent.toLowerCase().indexOf(q) !== -1;
+    l.style.display = match ? 'block' : 'none';
+  });
+});
 
-<div class="card">
-<span class="tag">INFO</span> Laporan di luar jam operasional tetap tercatat &amp; ditindaklanjuti saat operasional.
-</div>
+// Back to top
+document.getElementById('topBtn').addEventListener('click', function(){
+  window.scrollTo({top:0, behavior:'smooth'});
+});
 
-<p style="margin-top:30px;color:#888;font-size:12px;">Manual Book resmi R2PCKGZ1 — generated by Hermes.</p>
+// Mobile Menu
+var nav = document.querySelector('nav');
+var overlay = document.getElementById('overlay');
+document.getElementById('menuBtn').addEventListener('click', function(){
+  nav.classList.add('open'); overlay.classList.add('open');
+});
+overlay.addEventListener('click', function(){
+  nav.classList.remove('open'); overlay.classList.remove('open');
+});
+links.forEach(function(l){
+  l.addEventListener('click', function(){
+    if(window.innerWidth <= 860) { nav.classList.remove('open'); overlay.classList.remove('open'); }
+  });
+});
+</script>
 </body>
 </html>
