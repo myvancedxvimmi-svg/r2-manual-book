@@ -87,10 +87,24 @@
   .topbtn{position:fixed;top:14px;right:18px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
           color:var(--fg2);border-radius:20px;padding:6px 14px;font-size:12.5px;cursor:pointer;transition:.18s}
   .topbtn:hover{color:#fff;border-color:var(--acc);box-shadow:0 0 12px var(--glow)}
-  @media(max-width:860px){nav{display:none}main{padding:20px 16px}.topbtn{top:8px;right:10px}}
+  
+  /* mobile menu toggle */
+  .menu-btn{display:none;position:fixed;top:14px;left:14px;z-index:50;background:var(--bg4);border:1px solid var(--line2);
+            color:var(--fg);border-radius:8px;padding:6px 12px;cursor:pointer;}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40;backdrop-filter:blur(2px)}
+  
+  @media(max-width:860px){
+    .menu-btn{display:block}
+    nav{position:fixed;left:-280px;transition:left .3s;z-index:45;box-shadow:4px 0 20px rgba(0,0,0,.5)}
+    nav.open{left:0}
+    .overlay.open{display:block}
+    main{padding:60px 16px 20px}.topbtn{top:14px;right:14px}
+  }
 </style>
 </head>
 <body>
+<button class="menu-btn" id="menuBtn">☰ Menu</button>
+<div class="overlay" id="overlay"></div>
 <button class="topbtn" id="topBtn">⬆ Atas</button>
 <div class="wrap">
 <nav>
@@ -654,6 +668,21 @@ search.addEventListener('input', function(){
 // Back to top
 document.getElementById('topBtn').addEventListener('click', function(){
   window.scrollTo({top:0, behavior:'smooth'});
+});
+
+// Mobile Menu
+var nav = document.querySelector('nav');
+var overlay = document.getElementById('overlay');
+document.getElementById('menuBtn').addEventListener('click', function(){
+  nav.classList.add('open'); overlay.classList.add('open');
+});
+overlay.addEventListener('click', function(){
+  nav.classList.remove('open'); overlay.classList.remove('open');
+});
+links.forEach(function(l){
+  l.addEventListener('click', function(){
+    if(window.innerWidth <= 860) { nav.classList.remove('open'); overlay.classList.remove('open'); }
+  });
 });
 </script>
 </body>
